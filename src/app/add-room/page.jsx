@@ -1,5 +1,7 @@
 "use client";
 
+import { toast } from "react-toastify";
+
 const amenitiesOptions = [
   "Whiteboard",
   "Projector",
@@ -10,30 +12,56 @@ const amenitiesOptions = [
 ];
 
 const AddRoomForm = () => {
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    const form = e.target;
+  const form = e.target;
 
-    const selectedAmenities = amenitiesOptions.filter(
+  const selectedAmenities =
+    amenitiesOptions.filter(
       (item) => form[item]?.checked
     );
 
-    const roomData = {
-      roomName: form.roomName.value,
-      description: form.description.value,
-      image: form.image.value,
-      floor: form.floor.value,
-      capacity: Number(form.capacity.value),
-      hourlyRate: Number(form.hourlyRate.value),
-      amenities: selectedAmenities,
-      bookingCount: 0,
-    };
-
-    console.log(roomData);
-
-    // later API call
+  const roomData = {
+    roomName: form.roomName.value,
+    description: form.description.value,
+    image: form.image.value,
+    floor: form.floor.value,
+    capacity: Number(
+      form.capacity.value
+    ),
+    hourlyRate: Number(
+      form.hourlyRate.value
+    ),
+    amenities:
+      selectedAmenities,
+    bookingCount: 0,
   };
+
+  try {
+    const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/rooms`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type":"application/json",
+        },
+        body: JSON.stringify(roomData),
+      }
+    );
+
+    const data = await res.json();
+
+    console.log(data);
+
+    if (data.insertedId) {
+      toast.success("Room added successfully");
+
+      form.reset();
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
 
   return (
     <section className="min-h-screen bg-slate-50 py-14">
