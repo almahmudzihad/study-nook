@@ -1,14 +1,12 @@
 
 import RoomCard from "@/components/rooms/RoomCard";
+import { getAllRooms } from "../../data";
 
-async function getRooms() {
-  const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/rooms`);
-  return res.json();
-}
+
 
 export default async function RoomsPage() {
-  const rooms = await getRooms();
-  console.log(rooms);
+  const rooms = await getAllRooms();
+  
   return (
     <section className="bg-slate-50 min-h-screen py-14">
       <div className="max-w-7xl mx-auto px-4">
