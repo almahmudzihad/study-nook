@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { authClient } from "@/lib/auth-client";
+import { FcGoogle } from "react-icons/fc";
 
 const LoginPage = () => {
   const [error, setError] = useState("");
@@ -127,8 +128,11 @@ const LoginPage = () => {
         </div>
 
         {/* Google Button */}
-        <button className="w-full border border-slate-300 hover:bg-slate-100 py-4 rounded-2xl font-medium transition">
-          Continue with Google
+        <button
+          className="w-full border border-slate-300 hover:bg-slate-100 py-4 rounded-2xl font-medium transition flex items-center justify-center gap-3"
+        >
+          <FcGoogle className="text-2xl" />
+          <span>Continue with Google</span>
         </button>
 
         {/* Register Link */}
