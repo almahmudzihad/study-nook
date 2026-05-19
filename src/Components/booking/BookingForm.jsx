@@ -1,9 +1,12 @@
 "use client";
 
+import { authClient } from "@/lib/auth-client";
 import { useState } from "react";
 import { toast } from "react-toastify";
 
 const BookingForm = ({ room }) => {
+  const {data: session} = authClient.useSession() 
+    const  userEmail = session?.user?.email;
   const [date, setDate] = useState("");
   const [start, setStart] = useState(8);
   const [end, setEnd] = useState(9);
@@ -24,6 +27,7 @@ const BookingForm = ({ room }) => {
       endTime: end,
       totalCost,
       status: "confirmed",
+      bookingEmail: userEmail
     };
 
     try {

@@ -25,10 +25,7 @@ const MyListingsPage = () => {
       try {
         setLoading(true);
 
-        const data =
-          await getMyListings(
-            userEmail
-          );
+        const data = await getMyListings(userEmail);
 
         setRooms(data || []);
       } catch (error) {
