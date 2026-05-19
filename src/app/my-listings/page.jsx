@@ -2,20 +2,35 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { getAllRooms } from "@/data";
+import { getMyListings } from "@/data";
+import { authClient } from "@/lib/auth-client";
 
 const MyListingsPage = () => {
-  const [rooms, setRooms] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const { data: session } =
+    authClient.useSession();
 
-  console.log(rooms);
+  const userEmail =
+    session?.user?.email;
+
+  const [rooms, setRooms] =
+    useState([]);
+
+  const [loading, setLoading] =
+    useState(true);
 
   useEffect(() => {
     const fetchMyRooms = async () => {
+      if (!userEmail) return; // 🔥 IMPORTANT FIX
+
       try {
-        
-        const data = await getAllRooms();
-        setRooms(data);
+        setLoading(true);
+
+        const data =
+          await getMyListings(
+            userEmail
+          );
+
+        setRooms(data || []);
       } catch (error) {
         console.log(error);
       } finally {
@@ -24,7 +39,7 @@ const MyListingsPage = () => {
     };
 
     fetchMyRooms();
-  }, []);
+  }, [userEmail]); // 🔥 IMPORTANT FIX
 
   if (loading) {
     return (
@@ -40,10 +55,12 @@ const MyListingsPage = () => {
 
         {/* Header */}
         <div className="flex flex-col md:flex-row md:justify-between md:items-center gap-4 mb-10">
+
           <div>
             <h1 className="text-3xl font-bold text-slate-900">
               My Listings
             </h1>
+
             <p className="text-slate-500">
               Manage your study rooms easily
             </p>
@@ -55,9 +72,10 @@ const MyListingsPage = () => {
           >
             + Add Room
           </Link>
+
         </div>
 
-        {/* Empty */}
+        {/* Empty State */}
         {rooms.length === 0 ? (
           <div className="text-center py-20 text-slate-500">
             No rooms found. Start by adding your first room.
@@ -70,6 +88,7 @@ const MyListingsPage = () => {
                 key={room._id}
                 className="bg-white rounded-[28px] shadow-lg hover:shadow-2xl transition overflow-hidden flex flex-col"
               >
+
                 {/* Image */}
                 <div className="relative h-48 w-full">
                   <img
@@ -106,6 +125,7 @@ const MyListingsPage = () => {
 
                   {/* Actions */}
                   <div className="mt-auto pt-5 flex gap-3">
+
                     <button className="flex-1 bg-green-600 hover:bg-green-700 text-white py-2 rounded-xl transition">
                       Edit
                     </button>
@@ -113,6 +133,7 @@ const MyListingsPage = () => {
                     <button className="flex-1 bg-red-600 hover:bg-red-700 text-white py-2 rounded-xl transition">
                       Delete
                     </button>
+
                   </div>
 
                 </div>
@@ -121,6 +142,7 @@ const MyListingsPage = () => {
 
           </div>
         )}
+
       </div>
     </section>
   );

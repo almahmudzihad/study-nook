@@ -1,5 +1,8 @@
 "use client";
 
+import { authClient } from "@/lib/auth-client";
+import { redirect, useRouter } from "next/navigation";
+import { Router } from "next/router";
 import { toast } from "react-toastify";
 
 const amenitiesOptions = [
@@ -12,6 +15,10 @@ const amenitiesOptions = [
 ];
 
 const AddRoomForm = () => {
+  const router = useRouter();
+  const {data: session} = authClient.useSession() 
+  const  userEmail = session?.user?.email;
+    console.log(userEmail);
   const handleSubmit = async (e) => {
   e.preventDefault();
 
@@ -36,6 +43,7 @@ const AddRoomForm = () => {
     amenities:
       selectedAmenities,
     bookingCount: 0,
+    ownerEmail: userEmail
   };
 
   try {
@@ -51,12 +59,11 @@ const AddRoomForm = () => {
 
     const data = await res.json();
 
-    console.log(data);
 
     if (data.insertedId) {
       toast.success("Room added successfully");
 
-      form.reset();
+      router.push("/my-listings");
     }
   } catch (error) {
     console.log(error);
