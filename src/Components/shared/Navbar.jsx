@@ -4,16 +4,25 @@ import { authClient } from "@/lib/auth-client";
 import Link from "next/link";
 import { useState } from "react";
 
-const Navbar =  () => {
-  
-    
-    
+const Navbar = () => {
+  const { data: session } =
+    authClient.useSession();
+
+  const user = session?.user;
+
+  const handleLogout = async () => {
+    await authClient.signOut({
+      callbackURL: "/",
+    });
+  };
+
   const [open, setOpen] = useState(false);
 
   return (
     <header className="sticky top-0 z-50 bg-white border-b border-slate-200">
       <nav className="max-w-7xl mx-auto px-4 lg:px-8">
         <div className="flex items-center justify-between h-20">
+
           {/* Logo */}
           <Link href="/" className="flex items-center gap-3">
             <div className="w-11 h-11 rounded-2xl bg-blue-700 flex items-center justify-center">
@@ -36,37 +45,75 @@ const Navbar =  () => {
           <div className="hidden lg:flex items-center gap-8">
             <Link href="/">Home</Link>
             <Link href="/rooms">Rooms</Link>
-            <Link href="/add-room">
-              Add Room
-            </Link>
-            <Link href="/my-listings">
-              My Listings
-            </Link>
-            <Link href="/my-bookings">
-              My Bookings
-            </Link>
+
+            {user && (
+              <>
+                <Link href="/add-room">
+                  Add Room
+                </Link>
+                <Link href="/my-listings">
+                  My Listings
+                </Link>
+                <Link href="/my-bookings">
+                  My Bookings
+                </Link>
+              </>
+            )}
           </div>
 
           {/* Desktop Auth */}
-          <div className="hidden lg:flex gap-3">
-            <Link
-              href="/login"
-              className="px-5 py-2 border rounded-xl"
-            >
-              Login
-            </Link>
+          <div className="hidden lg:flex gap-3 items-center">
 
-            <Link
-              href="/register"
-              className="px-5 py-2 bg-blue-700 text-white rounded-xl"
-            >
-              Register
-            </Link>
+            {!user ? (
+              <>
+                <Link
+                  href="/login"
+                  className="px-5 py-2 border rounded-xl"
+                >
+                  Login
+                </Link>
+
+                <Link
+                  href="/register"
+                  className="px-5 py-2 bg-blue-700 text-white rounded-xl"
+                >
+                  Register
+                </Link>
+              </>
+            ) : (
+              <>
+                {/* Profile */}
+                <div className="flex items-center gap-3">
+
+                  <img
+                    src={
+                      user.image ||
+                      "/default-user.png"
+                    }
+                    className="w-9 h-9 rounded-full object-cover border"
+                  />
+
+                  <span className="text-sm font-medium">
+                    {user.name}
+                  </span>
+
+                  <button
+                    onClick={handleLogout}
+                    className="px-4 py-2 bg-red-500 text-white rounded-xl"
+                  >
+                    Logout
+                  </button>
+
+                </div>
+              </>
+            )}
           </div>
 
           {/* Mobile Toggle */}
           <button
-            onClick={() => setOpen(!open)}
+            onClick={() =>
+              setOpen(!open)
+            }
             className="lg:hidden text-3xl"
           >
             ☰
@@ -76,56 +123,61 @@ const Navbar =  () => {
         {/* Mobile Menu */}
         {open && (
           <div className="lg:hidden bg-white border-t border-slate-200 py-5 space-y-4">
-            <Link
-              href="/"
-              className="block"
-            >
+
+            <Link href="/" className="block">
               Home
             </Link>
 
-            <Link
-              href="/rooms"
-              className="block"
-            >
+            <Link href="/rooms" className="block">
               Rooms
             </Link>
 
-            <Link
-              href="/add-room"
-              className="block"
-            >
-              Add Room
-            </Link>
+            {user && (
+              <>
+                <Link href="/add-room" className="block">
+                  Add Room
+                </Link>
 
-            <Link
-              href="/my-listings"
-              className="block"
-            >
-              My Listings
-            </Link>
+                <Link href="/my-listings" className="block">
+                  My Listings
+                </Link>
 
-            <Link
-              href="/my-bookings"
-              className="block"
-            >
-              My Bookings
-            </Link>
+                <Link href="/my-bookings" className="block">
+                  My Bookings
+                </Link>
+              </>
+            )}
 
+            {/* AUTH */}
             <div className="flex gap-3 pt-3">
-              <Link
-                href="/login"
-                className="px-4 py-2 border rounded-lg"
-              >
-                Login
-              </Link>
 
-              <Link
-                href="/register"
-                className="px-4 py-2 bg-blue-700 text-white rounded-lg"
-              >
-                Register
-              </Link>
+              {!user ? (
+                <>
+                  <Link
+                    href="/login"
+                    className="px-4 py-2 border rounded-lg"
+                  >
+                    Login
+                  </Link>
+
+                  <Link
+                    href="/register"
+                    className="px-4 py-2 bg-blue-700 text-white rounded-lg"
+                  >
+                    Register
+                  </Link>
+                </>
+              ) : (
+                <button
+                  onClick={handleLogout}
+                  className="px-4 py-2 bg-red-500 text-white rounded-lg"
+                >
+                  Logout
+                </button>
+              )}
+
             </div>
+
           </div>
         )}
       </nav>
