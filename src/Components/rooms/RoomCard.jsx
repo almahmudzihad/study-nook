@@ -2,11 +2,14 @@ import Image from "next/image";
 import Link from "next/link";
 
 const RoomCard = ({ room }) => {
+    
+    
   return (
     <div className="bg-white rounded-[28px] shadow-lg overflow-hidden hover:shadow-2xl transition">
 
       {/* Image */}
       <div className="relative h-52 w-full">
+        
         <Image
           src={room.image}
           alt={room.roomName}
@@ -56,11 +59,12 @@ const RoomCard = ({ room }) => {
 
         {/* Button */}
         <Link
-          href={`/rooms/${room.id}`}
+          href={`/rooms/${room._id}`} 
           className="block text-center mt-4 bg-blue-700 hover:bg-blue-800 text-white py-3 rounded-2xl font-medium transition"
         >
           View Details
         </Link>
+        
       </div>
     </div>
   );

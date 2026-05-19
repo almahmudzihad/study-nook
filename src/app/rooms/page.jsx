@@ -6,6 +6,7 @@ import { getAllRooms } from "../../data";
 
 export default async function RoomsPage() {
   const rooms = await getAllRooms();
+ 
   
   return (
     <section className="bg-slate-50 min-h-screen py-14">
@@ -29,11 +30,12 @@ export default async function RoomsPage() {
             className="w-full md:w-1/2 px-5 py-4 rounded-2xl border border-slate-300 focus:border-blue-600 outline-none"
           />
         </div>
+        
 
         {/* Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {
-          rooms.map(room=> <RoomCard key={room._id} room={room} />)
+          rooms.map( room => <RoomCard key={room._id} room={room} />)
           }
         </div>
       </div>
