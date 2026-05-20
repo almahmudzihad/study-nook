@@ -54,6 +54,11 @@ const LoginPage = () => {
       setLoading(false);
     }
   };
+  const handelGoogleSignIn = async () => {
+   await authClient.signIn.social({
+    provider: "google",
+  });
+};
 
   return (
     <section className="min-h-screen bg-slate-50 flex items-center justify-center px-4 py-12">
@@ -128,7 +133,7 @@ const LoginPage = () => {
         </div>
 
         {/* Google Button */}
-        <button
+        <button onClick={handelGoogleSignIn}
           className="w-full border border-slate-300 hover:bg-slate-100 py-4 rounded-2xl font-medium transition flex items-center justify-center gap-3"
         >
           <FcGoogle className="text-2xl" />
