@@ -4,19 +4,18 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { getMyListings } from "@/data";
 import { authClient } from "@/lib/auth-client";
+import DeleteModal from "@/components/rooms/DeleteModal";
+
 
 const MyListingsPage = () => {
-  const { data: session } =
-    authClient.useSession();
+  const { data: session } = authClient.useSession();
 
-  const userEmail =
-    session?.user?.email;
+  const userEmail = session?.user?.email;
 
-  const [rooms, setRooms] =
-    useState([]);
-
-  const [loading, setLoading] =
-    useState(true);
+  const [rooms, setRooms] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [deleteId, setDeleteId] = useState(null);
+  const [openDelete, setOpenDelete] = useState(false);
 
   useEffect(() => {
     const fetchMyRooms = async () => {
@@ -25,10 +24,7 @@ const MyListingsPage = () => {
       try {
         setLoading(true);
 
-        const data =
-          await getMyListings(
-            userEmail
-          );
+        const data = await getMyListings(userEmail);
 
         setRooms(data || []);
       } catch (error) {
@@ -40,6 +36,31 @@ const MyListingsPage = () => {
 
     fetchMyRooms();
   }, [userEmail]);
+  const handleDelete = async () => {
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/rooms/${deleteId}`,
+      {
+        method: "DELETE",
+      }
+    );
+
+    const data = await res.json();
+
+    if (data.deletedCount) {
+      setRooms((prev) =>
+        prev.filter(
+          (r) => r._id !== deleteId
+        )
+      );
+
+      setOpenDelete(false);
+      setDeleteId(null);
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
 
   if (loading) {
     return (
@@ -74,7 +95,7 @@ const MyListingsPage = () => {
           </Link>
         </div>
 
-        {/* Empty */}
+        {/* Empty State */}
         {rooms.length === 0 ? (
           <div className="text-center py-20 text-slate-500">
             No rooms found
@@ -87,120 +108,101 @@ const MyListingsPage = () => {
               {/* Table Head */}
               <thead className="bg-slate-100 text-slate-700">
                 <tr>
-                  <th className="p-4">
-                    Room
-                  </th>
-
-                  <th className="p-4">
-                    Floor
-                  </th>
-
-                  <th className="p-4">
-                    Capacity
-                  </th>
-
-                  <th className="p-4">
-                    Price
-                  </th>
-
-                  <th className="p-4">
-                    Bookings
-                  </th>
-
-                  <th className="p-4 text-center">
-                    Actions
-                  </th>
+                  <th className="p-4">Room</th>
+                  <th className="p-4">Floor</th>
+                  <th className="p-4">Capacity</th>
+                  <th className="p-4">Price</th>
+                  <th className="p-4">Bookings</th>
+                  <th className="p-4 text-center">Actions</th>
                 </tr>
               </thead>
 
               {/* Table Body */}
               <tbody>
-                {rooms.map(
-                  (room) => (
-                    <tr
-                      key={room._id}
-                      className="border-b hover:bg-slate-50"
-                    >
+                {rooms.map((room) => (
+                  <tr
+                    key={room._id}
+                    className="border-b hover:bg-slate-50"
+                  >
 
-                      {/* Room */}
-                      <td className="p-4 flex items-center gap-3">
-                        <img
-                          src={
-                            room.image
-                          }
-                          className="w-12 h-12 rounded-xl object-cover"
-                        />
+                    {/* Room */}
+                    <td className="p-4 flex items-center gap-3">
 
-                        <div>
-                          <p className="font-semibold text-slate-900">
-                            {
-                              room.roomName
-                            }
-                          </p>
+                      <img
+                        src={room.image}
+                        alt={room.roomName}
+                        className="w-12 h-12 rounded-xl object-cover"
+                      />
 
-                          <p className="text-xs text-slate-500 line-clamp-1">
-                            {
-                              room.description
-                            }
-                          </p>
-                        </div>
-                      </td>
+                      <div>
+                        <p className="font-semibold text-slate-900">
+                          {room.roomName}
+                        </p>
 
-                      {/* Floor */}
-                      <td className="p-4 text-slate-700">
-                        {
-                          room.floor
-                        }
-                      </td>
+                        <p className="text-xs text-slate-500 line-clamp-1">
+                          {room.description}
+                        </p>
+                      </div>
+                    </td>
 
-                      {/* Capacity */}
-                      <td className="p-4 text-slate-700">
-                        {
-                          room.capacity
-                        }{" "}
-                        people
-                      </td>
+                    {/* Floor */}
+                    <td className="p-4 text-slate-700">
+                      {room.floor}
+                    </td>
 
-                      {/* Price */}
-                      <td className="p-4 font-semibold text-blue-700">
-                        $
-                        {
-                          room.hourlyRate
-                        }
-                        /hr
-                      </td>
+                    {/* Capacity */}
+                    <td className="p-4 text-slate-700">
+                      {room.capacity} people
+                    </td>
 
-                      {/* Bookings */}
-                      <td className="p-4">
-                        {
-                          room.bookingCount
-                        }
-                      </td>
+                    {/* Price */}
+                    <td className="p-4 font-semibold text-blue-700">
+                      ${room.hourlyRate}/hr
+                    </td>
 
-                      {/* Actions */}
-                      <td className="p-4">
-                        <div className="flex gap-2 justify-center">
+                    {/* Bookings */}
+                    <td className="p-4">
+                      {room.bookingCount}
+                    </td>
 
-                          <button className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-sm">
-                            Edit
-                          </button>
+                    {/* Actions */}
+                    <td className="p-4">
+                      <div className="flex gap-2 justify-center">
 
-                          <button className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm">
-                            Delete
-                          </button>
+                        <button className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-sm">
+                          Edit
+                        </button>
 
-                        </div>
-                      </td>
+                        <button
+                        onClick={() => {
+                            setDeleteId(room._id);
+                            setOpenDelete(true);
+                          }}
+                          className="px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm"
+                        >
+                          Delete
+                        </button>                       
 
-                    </tr>
-                  )
-                )}
+                      </div>
+                    </td>
+
+                  </tr>
+                ))}
               </tbody>
+
             </table>
 
           </div>
         )}
+
       </div>
+      <DeleteModal
+        isOpen={openDelete}
+        onClose={() =>
+          setOpenDelete(false)
+        }
+        onConfirm={handleDelete}
+      />
     </section>
   );
 };
