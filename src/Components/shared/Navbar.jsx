@@ -173,86 +173,67 @@ const Navbar = () => {
 
         {/* Mobile Menu */}
         {open && (
-          <div className="lg:hidden bg-white border-t border-slate-200 py-5 space-y-4">
+          <div className="fixed inset-0 z-50 bg-black/40 lg:hidden">
+            
+            {/* SIDE PANEL */}
+            <div className="absolute right-0 top-0 w-72 h-full bg-white shadow-xl p-6 flex flex-col gap-4">
 
-            <Link
-              href="/"
-              className={navLinkClass(
-                "/"
-              )}
-            >
-              Home
-            </Link>
+              {/* Close button */}
+              <button
+                onClick={() => setOpen(false)}
+                className="text-right text-2xl mb-4"
+              >
+                ✕
+              </button>
 
-            <Link
-              href="/rooms"
-              className={navLinkClass(
-                "/rooms"
-              )}
-            >
-              Rooms
-            </Link>
+              {/* Links */}
+              <Link href="/" onClick={() => setOpen(false)} className={navLinkClass("/")}>
+                Home
+              </Link>
 
-            {user && (
-              <>
-                <Link
-                  href="/add-room"
-                  className={navLinkClass(
-                    "/add-room"
-                  )}
-                >
-                  Add Room
-                </Link>
+              <Link href="/rooms" onClick={() => setOpen(false)} className={navLinkClass("/rooms")}>
+                Rooms
+              </Link>
 
-                <Link
-                  href="/my-listings"
-                  className={navLinkClass(
-                    "/my-listings"
-                  )}
-                >
-                  My Listings
-                </Link>
-
-                <Link
-                  href="/my-bookings"
-                  className={navLinkClass(
-                    "/my-bookings"
-                  )}
-                >
-                  My Bookings
-                </Link>
-              </>
-            )}
-
-            <div className="flex gap-3 pt-3">
-              {!user ? (
+              {user && (
                 <>
-                  <Link
-                    href="/login"
-                    className="px-4 py-2 border rounded-lg"
-                  >
-                    Login
+                  <Link href="/add-room" onClick={() => setOpen(false)} className={navLinkClass("/add-room")}>
+                    Add Room
                   </Link>
 
-                  <Link
-                    href="/register"
-                    className="px-4 py-2 bg-blue-700 text-white rounded-lg"
-                  >
-                    Register
+                  <Link href="/my-listings" onClick={() => setOpen(false)} className={navLinkClass("/my-listings")}>
+                    My Listings
+                  </Link>
+
+                  <Link href="/my-bookings" onClick={() => setOpen(false)} className={navLinkClass("/my-bookings")}>
+                    My Bookings
                   </Link>
                 </>
-              ) : (
-                <button
-                  onClick={
-                    handleLogout
-                  }
-                  className="px-4 py-2 bg-red-500 text-white rounded-lg"
-                >
-                  Logout
-                </button>
               )}
-            </div>
 
+              {/* AUTH */}
+              <div className="mt-6">
+                {!user ? (
+                  <div className="flex flex-col gap-3">
+                    <Link href="/login" className="px-4 py-2 border rounded-lg">
+                      Login
+                    </Link>
+
+                    <Link href="/register" className="px-4 py-2 bg-blue-700 text-white rounded-lg">
+                      Register
+                    </Link>
+                  </div>
+                ) : (
+                  <button
+                    onClick={handleLogout}
+                    className="px-4 py-2 bg-red-500 text-white rounded-lg w-full"
+                  >
+                    Logout
+                  </button>
+                )}
+              </div>
+
+            </div>
           </div>
         )}
       </nav>

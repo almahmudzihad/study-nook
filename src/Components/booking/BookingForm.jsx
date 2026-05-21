@@ -27,7 +27,8 @@ const BookingForm = ({ room }) => {
       endTime: end,
       totalCost,
       status: "confirmed",
-      bookingEmail: userEmail
+      bookingEmail: userEmail,
+      roomName: room.roomName
     };
 
     try {
