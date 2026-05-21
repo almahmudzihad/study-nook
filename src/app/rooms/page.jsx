@@ -1,4 +1,4 @@
-import { getAllRooms } from "../../data";
+import { getAllRooms } from "@/data";
 import RoomsClient from "@/Components/rooms/RoomsClient";
 
 export default async function RoomsPage() {
@@ -10,14 +10,15 @@ export default async function RoomsPage() {
 
         {/* Header */}
         <div className="text-center mb-12">
-          <h1 className="text-4xl font-bold text-slate-900">
-            Available Study Rooms
+          <h1 className="text-5xl font-bold text-slate-900">
+            Find Your Perfect Study Room
           </h1>
-          <p className="text-slate-500 mt-3">
-            Browse and book your perfect study space
+          <p className="text-slate-500 mt-3 text-lg">
+            Search, filter & book your ideal study space
           </p>
         </div>
 
+        {/* Client Component */}
         <RoomsClient rooms={rooms} />
 
       </div>
