@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { authClient } from "@/lib/auth-client";
 import { FcGoogle } from "react-icons/fc";
+import { toast } from "react-toastify";
 
 const LoginPage = () => {
   const [error, setError] = useState("");
@@ -39,17 +40,20 @@ const LoginPage = () => {
 
           onSuccess: () => {
             form.reset();
+            toast.success("Login successful");
             router.push("/");
           },
 
           onError: (ctx) => {
             setError(ctx.error.message);
+            toast.error("Invalid email or password");
           },
         }
       );
     } catch (err) {
       console.log(err);
       setError("Something went wrong");
+      toast.error("Login failed");
     } finally {
       setLoading(false);
     }

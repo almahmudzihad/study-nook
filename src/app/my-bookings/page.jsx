@@ -17,6 +17,13 @@ const MyBookingsPage = () => {
   const [loading, setLoading] =
     useState(true);
 
+  // modal state
+  const [openModal, setOpenModal] =
+    useState(false);
+
+  const [selectedId, setSelectedId] =
+    useState(null);
+
   useEffect(() => {
     const fetchBookings = async () => {
       if (!userEmail) return;
@@ -24,9 +31,10 @@ const MyBookingsPage = () => {
       try {
         setLoading(true);
 
-        
-
-        const data = await getMyBookings(userEmail);
+        const data =
+          await getMyBookings(
+            userEmail
+          );
 
         setBookings(data || []);
       } catch (error) {
@@ -39,9 +47,11 @@ const MyBookingsPage = () => {
     fetchBookings();
   }, [userEmail]);
 
+  // cancel booking API
   const handleCancel = async (id) => {
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/bookings/${id}/cancel`,
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/bookings/${id}/cancel`,
         {
           method: "PATCH",
         }
@@ -55,8 +65,7 @@ const MyBookingsPage = () => {
             b._id === id
               ? {
                   ...b,
-                  status:
-                    "cancelled",
+                  status: "cancelled",
                 }
               : b
           )
@@ -90,57 +99,163 @@ const MyBookingsPage = () => {
             You have no bookings yet.
           </div>
         ) : (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div className="overflow-x-auto bg-white rounded-2xl shadow-lg">
 
-            {bookings.map((booking) => (
-              <div
-                key={booking._id}
-                className="bg-white rounded-2xl shadow-lg p-5 flex flex-col"
-              >
+            <table className="w-full text-left">
 
-                {/* Room Info */}
-                <h2 className="text-xl font-bold">
-                  {booking.roomName}
-                </h2>
+              {/* Head */}
+              <thead className="bg-slate-100 text-slate-700">
+                <tr>
+                  <th className="p-4">
+                    Room
+                  </th>
 
-                <p className="text-sm text-slate-500 mt-1">
-                  {booking.date}
-                </p>
+                  <th className="p-4">
+                    Date
+                  </th>
 
-                <p className="mt-2 text-slate-600">
-                  {booking.startTime} -{" "}
-                  {booking.endTime}
-                </p>
+                  <th className="p-4">
+                    Time
+                  </th>
 
-                <p className="mt-2 font-semibold text-blue-700">
-                  ${booking.totalCost}
-                </p>
+                  <th className="p-4">
+                    Cost
+                  </th>
 
-                {/* Status */}
-                <span
-                  className={`mt-3 inline-block text-xs px-3 py-1 rounded-full w-fit ${
-                    booking.status ===
-                    "cancelled"
-                      ? "bg-red-100 text-red-600"
-                      : "bg-green-100 text-green-600"
-                  }`}
-                >
-                  {booking.status}
-                </span>
+                  <th className="p-4">
+                    Status
+                  </th>
 
-                {/* Cancel Button */}
-                {booking.status !==
-                  "cancelled" && (
-                  <button
-                    onClick={() =>handleCancel(booking._id)}
-                    className="mt-4 bg-red-500 hover:bg-red-600 text-white py-2 rounded-xl transition"
-                  >
-                    Cancel Booking
-                  </button>
+                  <th className="p-4 text-center">
+                    Action
+                  </th>
+                </tr>
+              </thead>
+
+              {/* Body */}
+              <tbody>
+                {bookings.map(
+                  (booking) => (
+                    <tr
+                      key={booking._id}
+                      className="border-b hover:bg-slate-50"
+                    >
+
+                      <td className="p-4 font-semibold text-slate-900">
+                        {
+                          booking.roomName
+                        }
+                      </td>
+
+                      <td className="p-4 text-slate-600">
+                        {
+                          booking.date
+                        }
+                      </td>
+
+                      <td className="p-4 text-slate-600">
+                        {
+                          booking.startTime
+                        }{" "}
+                        -{" "}
+                        {
+                          booking.endTime
+                        }
+                      </td>
+
+                      <td className="p-4 font-semibold text-blue-700">
+                        $
+                        {
+                          booking.totalCost
+                        }
+                      </td>
+
+                      <td className="p-4">
+                        <span
+                          className={`text-xs px-3 py-1 rounded-full ${
+                            booking.status ===
+                            "cancelled"
+                              ? "bg-red-100 text-red-600"
+                              : "bg-green-100 text-green-600"
+                          }`}
+                        >
+                          {
+                            booking.status
+                          }
+                        </span>
+                      </td>
+
+                      <td className="p-4 text-center">
+                        {booking.status !==
+                          "cancelled" && (
+                          <button
+                            onClick={() => {
+                              setSelectedId(
+                                booking._id
+                              );
+                              setOpenModal(
+                                true
+                              );
+                            }}
+                            className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg text-sm"
+                          >
+                            Cancel
+                          </button>
+                        )}
+                      </td>
+
+                    </tr>
+                  )
                 )}
+              </tbody>
+
+            </table>
+
+          </div>
+        )}
+
+        {/* MODAL */}
+        {openModal && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+
+            <div className="bg-white w-[90%] max-w-md rounded-2xl p-6 shadow-xl">
+
+              <h2 className="text-xl font-bold text-slate-900">
+                Cancel Booking?
+              </h2>
+
+              <p className="text-slate-500 mt-2">
+                Are you sure you want to cancel this booking? This action cannot be undone.
+              </p>
+
+              <div className="flex gap-3 mt-6">
+
+                <button
+                  onClick={() => {
+                    setOpenModal(false);
+                    setSelectedId(null);
+                  }}
+                  className="flex-1 py-3 rounded-xl border border-slate-300 hover:bg-slate-100"
+                >
+                  No
+                </button>
+
+                <button
+                  onClick={async () => {
+                    await handleCancel(
+                      selectedId
+                    );
+                    setOpenModal(false);
+                    setSelectedId(null);
+                  }}
+                  className="flex-1 py-3 rounded-xl bg-red-600 hover:bg-red-700 text-white"
+                >
+                  Yes, Cancel
+                </button>
 
               </div>
-            ))}
+
+            </div>
 
           </div>
         )}

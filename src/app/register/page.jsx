@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { authClient } from "@/lib/auth-client";
 import { FcGoogle } from "react-icons/fc";
+import { toast } from "react-toastify";
 
 const RegisterPage = () => {
   const [error, setError] = useState("");
@@ -59,7 +60,7 @@ const RegisterPage = () => {
 
           onSuccess: () => {
             form.reset();
-
+            toast.success("register successful");
             router.push("/login");
           },
 
