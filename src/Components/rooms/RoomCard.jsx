@@ -2,24 +2,22 @@ import Image from "next/image";
 import Link from "next/link";
 
 const RoomCard = ({ room }) => {
-    
-    
   return (
-    <div className="bg-white rounded-[28px] shadow-lg overflow-hidden hover:shadow-2xl transition">
+    <div className="bg-white rounded-[28px] shadow-lg overflow-hidden hover:shadow-2xl transition relative z-0">
 
-      {/* Image */}
-      <div className="relative h-52 w-full">
-        
+      {/* IMAGE */}
+      <div className="relative h-52 w-full overflow-hidden">
         <Image
           src={room.image}
           alt={room.roomName}
           fill
           className="object-cover"
+          sizes="(max-width: 768px) 100vw, 33vw"
         />
       </div>
 
-      {/* Content */}
-      <div className="p-6 space-y-3">
+      {/* CONTENT */}
+      <div className="p-6 space-y-3 relative z-10">
 
         <h2 className="text-xl font-bold text-slate-900">
           {room.roomName}
@@ -29,7 +27,6 @@ const RoomCard = ({ room }) => {
           {room.description}
         </p>
 
-        {/* Info */}
         <div className="flex justify-between text-sm text-slate-600">
           <span>📍 {room.floor}</span>
           <span>👥 {room.capacity}</span>
@@ -45,9 +42,8 @@ const RoomCard = ({ room }) => {
           </p>
         </div>
 
-        {/* Amenities */}
         <div className="flex flex-wrap gap-2">
-          {room.amenities.slice(0, 3).map((a, i) => (
+          {room.amenities?.slice(0, 3).map((a, i) => (
             <span
               key={i}
               className="text-xs bg-slate-100 px-3 py-1 rounded-full"
@@ -57,14 +53,13 @@ const RoomCard = ({ room }) => {
           ))}
         </div>
 
-        {/* Button */}
         <Link
-          href={`/rooms/${room._id}`} 
+          href={`/rooms/${room._id}`}
           className="block text-center mt-4 bg-blue-700 hover:bg-blue-800 text-white py-3 rounded-2xl font-medium transition"
         >
           View Details
         </Link>
-        
+
       </div>
     </div>
   );

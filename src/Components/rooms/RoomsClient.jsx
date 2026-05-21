@@ -40,7 +40,7 @@ const RoomsClient = ({ rooms }) => {
   };
 
   return (
-    <div className="grid lg:grid-cols-4 gap-8">
+    <div className="grid lg:grid-cols-4 gap-8 items-start">
 
       {/* FILTER SIDEBAR */}
       <div className="bg-white p-6 rounded-[28px] shadow-md h-fit sticky top-24">
@@ -111,7 +111,7 @@ const RoomsClient = ({ rooms }) => {
       </div>
 
       {/* ROOMS GRID */}
-      <div className="lg:col-span-3">
+      <div className="lg:col-span-3 min-w-0">
 
         {/* HEADER */}
         <div className="flex justify-between mb-6">
