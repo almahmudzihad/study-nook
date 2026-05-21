@@ -42,11 +42,16 @@ const MyListingsPage = () => {
     fetchMyRooms();
   }, [userEmail]);
   const handleDelete = async () => {
+  const {data: tokenData} = await authClient.token();
+
   try {
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/rooms/${deleteId}`,
       {
         method: "DELETE",
+        headers: {
+          authorization: `Bearer ${tokenData?.token}`,
+        }
       }
     );
 

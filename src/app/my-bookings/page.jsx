@@ -50,12 +50,16 @@ const MyBookingsPage = () => {
 
   // cancel booking API
   const handleCancel = async (id) => {
+  const {data: tokenData} = await authClient.token();
     
     try {
       const res = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/bookings/${id}/cancel`,
         {
           method: "PATCH",
+          headers: {
+            authorization: `Bearer ${tokenData?.token}`,
+          },
         }
       );
 
