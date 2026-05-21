@@ -5,6 +5,7 @@ import Link from "next/link";
 import { getMyListings } from "@/data";
 import { authClient } from "@/lib/auth-client";
 import DeleteModal from "@/components/rooms/DeleteModal";
+import EditModal from "@/Components/rooms/EditModal";
 
 
 const MyListingsPage = () => {
@@ -16,6 +17,8 @@ const MyListingsPage = () => {
   const [loading, setLoading] = useState(true);
   const [deleteId, setDeleteId] = useState(null);
   const [openDelete, setOpenDelete] = useState(false);
+  const [editRoom, setEditRoom] = useState(null);
+  const [openEdit, setOpenEdit] = useState(false);
 
   useEffect(() => {
     const fetchMyRooms = async () => {
@@ -61,7 +64,12 @@ const MyListingsPage = () => {
     console.log(error);
   }
 };
+const fetchMyRooms = async () => {
+  if (!userEmail) return;
 
+  const data = await getMyListings(userEmail);
+  setRooms(data || []);
+};
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -169,7 +177,13 @@ const MyListingsPage = () => {
                     <td className="p-4">
                       <div className="flex gap-2 justify-center">
 
-                        <button className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-sm">
+                        <button
+                          onClick={() => {
+                            setEditRoom(room);
+                            setOpenEdit(true);
+                          }}
+                          className="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg text-sm"
+                        >
                           Edit
                         </button>
 
@@ -202,6 +216,12 @@ const MyListingsPage = () => {
           setOpenDelete(false)
         }
         onConfirm={handleDelete}
+      />
+      <EditModal
+        isOpen={openEdit}
+        room={editRoom}
+        onClose={() => setOpenEdit(false)}
+        onUpdated={fetchMyRooms}
       />
     </section>
   );
