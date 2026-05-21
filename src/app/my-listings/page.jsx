@@ -6,6 +6,7 @@ import { getMyListings } from "@/data";
 import { authClient } from "@/lib/auth-client";
 import DeleteModal from "@/components/rooms/DeleteModal";
 import EditModal from "@/Components/rooms/EditModal";
+import { toast } from "react-toastify";
 
 
 const MyListingsPage = () => {
@@ -55,6 +56,9 @@ const MyListingsPage = () => {
         prev.filter(
           (r) => r._id !== deleteId
         )
+      );
+      toast.error(
+        "Room deleted successfully"
       );
 
       setOpenDelete(false);

@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { toast } from "react-toastify";
 
 const amenitiesOptions = [
   "Whiteboard",
@@ -64,12 +65,14 @@ const EditModal = ({
   };
 
   const handleUpdate = async () => {
+  try {
     const res = await fetch(
       `${process.env.NEXT_PUBLIC_API_URL}/rooms/${room._id}`,
       {
         method: "PUT",
         headers: {
-          "Content-Type": "application/json",
+          "Content-Type":
+            "application/json",
         },
         body: JSON.stringify(form),
       }
@@ -78,10 +81,21 @@ const EditModal = ({
     const data = await res.json();
 
     if (data.modifiedCount) {
+      toast.success(
+        "Room updated successfully"
+      );
+
       onUpdated();
       onClose();
     }
-  };
+  } catch (error) {
+    console.log(error);
+
+    toast.error(
+      "Failed to update room"
+    );
+  }
+ };
 
   if (!isOpen) return null;
 

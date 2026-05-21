@@ -52,6 +52,7 @@ const BookingForm = ({ room }) => {
       }
 
       toast.success("Room booked successfully!");
+      
     } catch (error) {
       toast.error(error);
     } finally {

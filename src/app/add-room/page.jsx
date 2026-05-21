@@ -215,7 +215,7 @@ const AddRoomForm = () => {
               type="submit"
               className="w-full py-4 rounded-2xl bg-blue-700 hover:bg-blue-800 text-white font-semibold text-lg transition"
             >
-              Add Room
+              Post Room
             </button>
           </form>
         </div>
