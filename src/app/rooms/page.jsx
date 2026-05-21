@@ -1,5 +1,5 @@
 
-import RoomCard from "@/components/rooms/RoomCard";
+import RoomCard from "@/Components/rooms/RoomCard";
 import { getAllRooms } from "../../data";
 
 

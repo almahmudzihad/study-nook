@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { getMyListings } from "@/data";
 import { authClient } from "@/lib/auth-client";
-import DeleteModal from "@/components/rooms/DeleteModal";
+import DeleteModal from "@/Components/rooms/DeleteModal";
 import EditModal from "@/Components/rooms/EditModal";
 import { toast } from "react-toastify";
 
