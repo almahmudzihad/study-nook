@@ -177,7 +177,7 @@ const fetchMyRooms = async () => {
                       {room.bookingCount}
                     </td>
 
-                    {/* Actions */}
+                    {/* Actions  action*/}
                     <td className="p-4">
                       <div className="flex gap-2 justify-center">
 
