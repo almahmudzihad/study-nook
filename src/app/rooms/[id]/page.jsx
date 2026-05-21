@@ -1,4 +1,5 @@
 import BookingForm from "@/Components/booking/BookingForm";
+import BookingGate from "@/Components/booking/BookingGate";
 import RoomOwnerActions from "@/Components/rooms/RoomOwnerActions";
 
 async function getRoom(id) {
@@ -90,7 +91,7 @@ export default async function RoomDetails({
 
         {/* Booking Section */}
         <div className="mt-12">
-          <BookingForm room={room} />
+          <BookingGate room={room} />
         </div>
 
       </div>

@@ -84,12 +84,12 @@ const Footer = () => {
             <div className="space-y-4">
               <div className="flex items-center gap-3">
                 <MdEmail className="text-blue-400 text-xl" />
-                <p>support@studynook.com</p>
+                <p>amzihad@gmail.com</p>
               </div>
 
               <div className="flex items-center gap-3">
                 <MdPhone className="text-blue-400 text-xl" />
-                <p>+880 1700-000000</p>
+                <p>+880 1752-533838</p>
               </div>
             </div>
           </div>
