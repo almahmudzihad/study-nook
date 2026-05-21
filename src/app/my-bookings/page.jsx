@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import { authClient } from "@/lib/auth-client";
 import { getMyBookings } from "@/data";
+import Loader from "@/Components/Loader";
 
 const MyBookingsPage = () => {
   const { data: session } =
@@ -77,11 +78,7 @@ const MyBookingsPage = () => {
   };
 
   if (loading) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        Loading...
-      </div>
-    );
+    return <Loader />
   }
 
   return (
