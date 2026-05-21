@@ -18,7 +18,6 @@ const AddRoomForm = () => {
   const router = useRouter();
   const {data: session} = authClient.useSession() 
   const  userEmail = session?.user?.email;
-    console.log(userEmail);
   const handleSubmit = async (e) => {
   e.preventDefault();
 
@@ -45,13 +44,16 @@ const AddRoomForm = () => {
     bookingCount: 0,
     ownerEmail: userEmail
   };
+  const {data: tokenData} = await authClient.token();
 
+  console.log(tokenData);
   try {
     const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/rooms`,
       {
         method: "POST",
         headers: {
           "Content-Type":"application/json",
+          authorization: `Bearer ${tokenData?.token}`,
         },
         body: JSON.stringify(roomData),
       }
